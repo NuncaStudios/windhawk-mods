@@ -58,7 +58,7 @@ exactly the same name as a *folder* on the desktop, that file's label will also 
 
 struct {
     bool hide_text;
-    bool hide_folders; // new
+    bool hide_folders; // new 
     bool hide_arrows;
 } g_settings;
 
