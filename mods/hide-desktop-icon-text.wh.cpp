@@ -58,6 +58,7 @@ exactly the same name as a *folder* on the desktop, that file's label will also 
 
 struct {
     bool hide_text;
+    bool hide_folders; // new
     bool hide_arrows;
 } g_settings;
 
@@ -146,6 +147,7 @@ static void UpdateFolderCache() {
 
 static inline bool ShouldHideLabel(LPCWSTR text, int cch) {
     if (!g_settings.hide_text) return false;
+    if (g_settings.hide_folders) return true; // new
     std::wstring s(text, cch == -1 ? wcslen(text) : cch);
     return g_folderNames.count(s) == 0;
 }
@@ -156,13 +158,13 @@ static inline bool ShouldHideLabel(LPCWSTR text, int cch) {
 
 LRESULT CALLBACK DesktopListSubclass(HWND hWnd, UINT uMsg, WPARAM wParam,
                                      LPARAM lParam, DWORD_PTR dwRefData) {
-    if (uMsg == WM_PAINT && g_settings.hide_text) {
-        UpdateFolderCache();
-        g_isDrawingDesktop = true;
-        LRESULT res = DefSubclassProc(hWnd, uMsg, wParam, lParam);
-        g_isDrawingDesktop = false;
-        return res;
-    }
+  if (uMsg == WM_PAINT && g_settings.hide_text) {
+      if (!g_settings.hide_folders) UpdateFolderCache();   // new
+      g_isDrawingDesktop = true;
+      LRESULT res = DefSubclassProc(hWnd, uMsg, wParam, lParam);
+      g_isDrawingDesktop = false;
+      return res;
+  }
 
     return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 }
@@ -298,6 +300,7 @@ HWND WINAPI CreateWindowExW_Hook(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR l
 
 void LoadSettings() {
     g_settings.hide_text = Wh_GetIntSetting(L"hide_text") != 0;
+    g_settings.hide_folders = Wh_GetIntSetting(L"hide_folders") != 0; // new
     g_settings.hide_arrows = Wh_GetIntSetting(L"hide_arrows") != 0;
 }
 
