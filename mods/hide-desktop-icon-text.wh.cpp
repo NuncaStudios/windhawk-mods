@@ -33,11 +33,9 @@ exactly the same name as a *folder* on the desktop, that file's label will also 
 - hide_text: true
   $name: Hide desktop icon text
   $description: Hides text labels for files and shortcuts on the desktop (keeps folder names).
-- hide_folders:
-   type: bool
-   default: false
-   label: Also hide folder names
-   description: Hides text labels for folders as well. Enable this if you want all desktop text hidden, or if a file has the same name as a folder and is not being hidden correctly.
+- hide_folders: false
+  $name: Also hide folder names
+  $description: Hides folder names too, so all desktop text is hidden. Also fixes files/shortcuts that share a name with a folder.
 - hide_arrows: true
   $name: Remove shortcut arrows
   $description: Removes the shortcut arrow overlay from icons (applies to the whole Explorer session).
